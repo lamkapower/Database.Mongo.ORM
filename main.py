@@ -60,15 +60,27 @@ def sort_event_by_time(db, collection):
     tickets = list(tickets_collection.find().sort('Дата', pymongo.ASCENDING))
     return print(tickets)
 
+def price_integer(db, collection):
+    tickets_db = client[db]
+    tickets_collection = tickets_db[collection]
+    tickets = tickets_collection.find()
+    for dict_ticket in tickets:
+        price = dict_ticket['Цена']
+        dict_ticket['Цена'] = int(price)
+        query = {'_id': ObjectId(dict_ticket['_id'])}
+        tickets_collection.replace_one(query, dict_ticket)
+
+
 if __name__ == '__main__':
     # read_data('artists.csv', 'events_db', 'tickets')
     # tickets_db = client['events_db']
     # tickets_collection = tickets_db['tickets']
     # print(list(tickets_collection.find()))
     # print(list(tickets_collection.find()))
-    # find_cheapest('events_db', 'tickets')
+    find_cheapest('events_db', 'tickets')
+    # price_integer('events_db', 'tickets')
     # find_by_name('Seconds to mars','events_db', 'tickets')
     # event_time('events_db', 'tickets')
-    sort_event_by_time('events_db', 'tickets')
+    # sort_event_by_time('events_db', 'tickets')
     # print(tickets_db.list_collection_names())
 
